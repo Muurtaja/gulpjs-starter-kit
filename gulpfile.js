@@ -8,7 +8,10 @@ const sourcemaps = require('gulp-sourcemaps');
 // Paths
 const paths = {
     html: {
-        src: 'src/html/pages/**/*.html',
+        src: [
+            'src/html/pages/**/*.html',
+            '!src/html/pages/**/_*.html',
+        ],
         dest: 'dist/',
         watch: 'src/html/**/*.html'
     },
