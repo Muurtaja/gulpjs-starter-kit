@@ -3,7 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@@title</title>
+    @@include('../partials/seo.html')
+
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 </head>
@@ -13,9 +17,9 @@
     <main>
         <h1>Welcome to the Starter Kit</h1>
         <button class="button btn btn-sm">Click Me</button>
-        @@include("../content/@@section")
+        @@include("../pages/@@section")
     </main>
- 
+
     @@include('../partials/footer.html')
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/jquery-3.7.1.min.js"></script>
