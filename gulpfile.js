@@ -13,21 +13,21 @@ const paths = {
         watch: 'src/html/**/*.html'
     },
     scss: {
-        src: 'src/scss/style.scss',
-        dest: 'dist/css/',
-        watch: 'src/scss/**/*.scss'
+        src: 'src/assets/scss/style.scss',
+        dest: 'dist/assets/css/',
+        watch: 'src/assets/scss/**/*.scss'
     },
     css: {
-        src: 'src/css/**/*.css',
-        dest: 'dist/css/'
+        src: 'src/assets/css/**/*.css',
+        dest: 'dist/assets/css/'
     },
     js: {
-        src: 'src/js/**/*.js',
-        dest: 'dist/js/'
+        src: 'src/assets/js/**/*.js',
+        dest: 'dist/assets/js/'
     },
     img: {
-        src: 'src/img/**/*',
-        dest: 'dist/img/'
+        src: 'src/assets/img/**/*',
+        dest: 'dist/assets/img/'
     }
 };
 
