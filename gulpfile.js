@@ -72,7 +72,7 @@ function js() {
 }
 // Copy images
 function images() {
-    return src(paths.img.src)
+    return src(paths.img.src, { encoding: false })
         .pipe(dest(paths.img.dest))
         .pipe(browserSync.stream());
 }
