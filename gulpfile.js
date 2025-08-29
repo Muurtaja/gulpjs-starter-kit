@@ -31,6 +31,10 @@ const paths = {
     img: {
         src: 'src/assets/img/**/*',
         dest: 'dist/assets/img/'
+    },
+    webfonts: {
+        src: 'src/assets/webfonts/**/*',
+        dest: 'dist/assets/webfonts/'
     }
 };
 
@@ -76,6 +80,12 @@ function images() {
         .pipe(dest(paths.img.dest))
         .pipe(browserSync.stream());
 }
+// Copy others
+function webfonts() {
+    return src(paths.webfonts.src)
+        .pipe(dest(paths.webfonts.dest))
+        .pipe(browserSync.stream());
+}
 
 // Watch
 function serve() {
@@ -95,6 +105,6 @@ function serve() {
 // Default task
 exports.default = series(
     clean,
-    parallel(html, scss, css, js, images),
+    parallel(html, scss, css, js, images, webfonts),
     serve
 );

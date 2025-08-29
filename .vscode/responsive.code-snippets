@@ -1,0 +1,123 @@
+{
+    "Mobile Landscape": {
+        "prefix": "@landscape",
+        "scope": "scss",
+        "body": [
+            "@include landscape {",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media all and (orientation: landscape)"
+    },
+    "Mobile Portrait": {
+        "prefix": "@portrait",
+        "scope": "scss",
+        "body": [
+            "@include portrait {",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media all and (orientation: portrait)"
+    },
+    "Extra Extra Small Screen": {
+        "prefix": "@xxsm",
+        "scope": "scss",
+        "body": [
+            "@include xxsm{",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media screen and (max-width: 374px)"
+    },
+    "Extra Small Screen": {
+        "prefix": "@xsm",
+        "scope": "scss",
+        "body": [
+            "@include xsm{",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media screen and (max-width: 424px)"
+    },
+    "Medium Small Screen": {
+        "prefix": "@msm",
+        "scope": "scss",
+        "body": [
+            "@include msm{",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media screen and (max-width: 575px)"
+    },
+    "Small Screen": {
+        "prefix": "@sm",
+        "scope": "scss",
+        "body": [
+            "@include sm{",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media screen and (max-width: 767px)"
+    },
+    "Large Screen": {
+        "prefix": "@md",
+        "scope": "scss",
+        "body": [
+            "@include md{",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media screen and (max-width: 991px)"
+    },
+    "Extra Large Screen": {
+        "prefix": "@lg",
+        "scope": "scss",
+        "body": [
+            "@include lg{",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media screen and (max-width: 1199px)"
+    },
+    "Extra Extra Large Screen": {
+        "prefix": "@xl",
+        "scope": "scss",
+        "body": [
+            "@include xl{",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media screen and (max-width: 1399px)"
+    },
+    "Extra Extra Extra Large Screen": {
+        "prefix": "@xxl",
+        "scope": "scss",
+        "body": [
+            "@include xxl{",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media screen and (max-width: 1499px)"
+    },
+    "Extra Extra Extra Extra Large Screen": {
+        "prefix": "@xxxl",
+        "scope": "scss",
+        "body": [
+            "@include xxxl{",
+            "${TM_SELECTED_TEXT}",
+            "${0}",
+            "}"
+        ],
+        "description": "@media screen and (max-width: 1599px)"
+    }
+}

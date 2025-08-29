@@ -1,2 +1,40 @@
-$primary-color: #3498db;
-$text-color: #333;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Story+Script&display=swap');
+$colors: (
+    // Thee Color
+    "body-text": RGB(#707172),
+    "body-bg": RGB(#f5f6fa),
+    "sidebar-bg": RGB(#ffffff),
+    "heading-color": RGB(#111827),
+    "border-color": RGB(#ebecef),
+
+    // Semantic colors
+    "primary": RGB(#3b82f6),
+    "secondary": RGB(#6b7280),
+    "success": RGB(#22c55e),
+    "danger": RGB(#ef4444),
+    "warning": RGB(#f59e0b),
+    "info": RGB(#0ea5e9),
+
+    // Common Color
+    "light": RGB(#f3f4f6),
+    "dark": RGB(#1f2937),
+    "muted": RGB(#9ca3af),
+    "white": RGB(#ffffff),
+    "black": RGB(#000000),
+);
+
+// Mixin to generate CSS variables from color map
+@mixin getVariables($color-map) {
+    @each $name, $values in $color-map {
+        --#{$name}: #{$values};
+    }
+}
+
+
+:root {
+    @include getVariables($colors);
+
+    /* Typography */
+    --body-font: 'Roboto', sans-serif;
+    --heading-font: 'Story Script', sans-serif;
+}
