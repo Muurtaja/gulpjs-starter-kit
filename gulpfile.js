@@ -4,14 +4,30 @@ const fileInclude = require('gulp-file-include');
 const browserSync = require('browser-sync').create();
 const del = require('del');
 const sourcemaps = require('gulp-sourcemaps');
+const through2 = require('through2');
+const Vinyl = require('vinyl');
+const path = require('path');
+
+// Helpers
+function titleCase(str) {
+    return String(str)
+        .replace(/^_/, '')              // remove leading underscore
+        .replace(/\.[^.]+$/, '')        // drop extension
+        .replace(/[-_]+/g, ' ')         // dashes/underscores -> space
+        .replace(/\s+/g, ' ')
+        .trim()
+        .replace(/\b\w/g, m => m.toUpperCase());
+}
+
+function cleanFileName(basename) {
+    return basename.replace(/^_/, ''); // strip leading underscore for output filename
+}
 
 // Paths
 const paths = {
     html: {
-        src: [
-            'src/html/pages/**/*.html',
-            '!src/html/pages/**/_*.html',
-        ],
+        pages: 'src/html/pages/*.html',       // <-- loop these
+        layout: 'src/html/layouts/base.html',
         dest: 'dist/',
         watch: 'src/html/**/*.html'
     },
@@ -43,10 +59,47 @@ function clean() {
     return del(['dist']);
 }
 
-// HTML with file include
+/**
+ * Build pages:
+ *  - Read every file in src/html/pages/*.html
+ *  - Wrap its path into base.html via @@include parameters
+ *  - Run gulp-file-include
+ *  - Output one file per page (underscore removed if present)
+ */
 function html() {
-    return src(paths.html.src)
-        .pipe(fileInclude({ prefix: '@@', basepath: '@file' }))
+    return src(paths.html.pages)
+        .pipe(
+            through2.obj(function (pageFile, _, cb) {
+                if (!pageFile.isBuffer()) return cb(null, pageFile);
+
+                const pageRelPath = path.relative(
+                    path.join(pageFile.base, '..'), // src/html/
+                    pageFile.path                   // src/html/pages/<file>
+                ); // e.g. 'pages/_index.html' or 'pages/about.html'
+
+                const basename = path.basename(pageFile.path);           // '_index.html'
+                const outBase = cleanFileName(basename);                 // 'index.html'
+                const title = titleCase(basename);                       // 'Index' or 'About Us'
+
+                // Create a VIRTUAL wrapper file that includes base with params
+                // Section = the original page file relative path (e.g. 'pages/_index.html')
+                const wrapper = new Vinyl({
+                    cwd: pageFile.cwd,
+                    base: pageFile.base,
+                    path: path.join(pageFile.base, outBase), // output name at this stage
+                    contents: Buffer.from(
+                        `@@include('html/layouts/base.html', {\n` +
+                        `  "title": "${title}",\n` +
+                        `  "section": "${pageRelPath.replace(/\\/g, '/')}"\n` +
+                        `})\n`
+                    )
+                });
+
+                this.push(wrapper);
+                cb();
+            })
+        )
+        .pipe(fileInclude({ prefix: '@@', basepath: 'src' })) // basepath 'src' so our wrapper include works
         .pipe(dest(paths.html.dest))
         .pipe(browserSync.stream());
 }
@@ -68,31 +121,31 @@ function css() {
         .pipe(browserSync.stream());
 }
 
-// Copy JS (no concat)
+// Copy JS
 function js() {
     return src(paths.js.src)
         .pipe(dest(paths.js.dest))
         .pipe(browserSync.stream());
 }
+
 // Copy images
 function images() {
     return src(paths.img.src, { encoding: false })
         .pipe(dest(paths.img.dest))
         .pipe(browserSync.stream());
 }
-// Copy others
+
+// Copy webfonts
 function webfonts() {
     return src(paths.webfonts.src)
         .pipe(dest(paths.webfonts.dest))
         .pipe(browserSync.stream());
 }
 
-// Watch
+// Serve + watch
 function serve() {
     browserSync.init({
-        server: {
-            baseDir: 'dist'
-        }
+        server: { baseDir: 'dist' }
     });
 
     watch(paths.html.watch, html);
