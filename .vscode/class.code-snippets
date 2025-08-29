@@ -1,0 +1,18 @@
+{
+    "Flex Center": {
+        "prefix": "@center",
+        "scope": "scss",
+        "body": [
+            "@include center;"
+        ],
+        "description": "Display flex center"
+    },
+    "css before": {
+        "prefix": "@before",
+        "scope": "scss",
+        "body": [
+            "@include before;"
+        ],
+        "description": "Add content before element"
+    },
+}

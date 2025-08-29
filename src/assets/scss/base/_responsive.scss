@@ -1,0 +1,145 @@
+$breakpoints: (
+    "xxsm": 374px,
+    "xsm": 424px,
+    "msm": 575px,
+    "sm": 767px,
+    "md": 991px,
+    "lg": 1199px,
+    "xl": 1399px,
+    "xxl": 1499px,
+    "xxxl": 1599px,
+);
+
+@mixin reponsive ($px, $type: 'max-width') {
+    @media screen and (#{$type}:$px) {
+        @content;
+    }
+}
+
+
+// Define mixins manually using the $breakpoints map
+@mixin xxsm($type: 'max') {
+    @if ($type =="max") {
+        @media screen and (max-width: map-get($breakpoints, "xxsm")) {
+            @content;
+        }
+    }
+
+    @else {
+        @media screen and (min-width: calc(map-get($breakpoints, "xxsm") + 1px)) {
+            @content;
+        }
+    }
+}
+
+@mixin xsm($type: 'max') {
+    @if ($type =="max") {
+        @media screen and (max-width: map-get($breakpoints, "xsm")) {
+            @content;
+        }
+    }
+
+    @else {
+        @media screen and (min-width: calc(map-get($breakpoints, "xsm") + 1px)) {
+            @content;
+        }
+    }
+}
+
+@mixin msm($type: 'max') {
+    @if ($type =="max") {
+        @media screen and (max-width: map-get($breakpoints, "msm")) {
+            @content;
+        }
+    }
+
+    @else {
+        @media screen and (min-width: calc(map-get($breakpoints, "msm") + 1px)) {
+            @content;
+        }
+    }
+}
+
+@mixin sm($type: 'max') {
+    @if ($type =="max") {
+        @media screen and (max-width: map-get($breakpoints, "sm")) {
+            @content;
+        }
+    }
+
+    @else {
+        @media screen and (min-width: calc(map-get($breakpoints, "sm") + 1px)) {
+            @content;
+        }
+    }
+}
+
+@mixin md($type: 'max') {
+    @if ($type =="max") {
+        @media screen and (max-width: map-get($breakpoints, "md")) {
+            @content;
+        }
+    }
+
+    @else {
+        @media screen and (min-width: calc(map-get($breakpoints, "md") + 1px)) {
+            @content;
+        }
+    }
+}
+
+@mixin lg($type: 'max') {
+    @if ($type =="max") {
+        @media screen and (max-width: map-get($breakpoints, "lg")) {
+            @content;
+        }
+    }
+
+    @else {
+        @media screen and (min-width: calc(map-get($breakpoints, "lg") + 1px)) {
+            @content;
+        }
+    }
+}
+
+@mixin xl($type: 'max') {
+    @if ($type =="max") {
+        @media screen and (max-width: map-get($breakpoints, "xl")) {
+            @content;
+        }
+    }
+
+    @else {
+        @media screen and (min-width: calc(map-get($breakpoints, "xl") + 1px)) {
+            @content;
+        }
+    }
+}
+
+@mixin xxl($type: 'max') {
+    @if ($type =="max") {
+        @media screen and (max-width: map-get($breakpoints, "xxl")) {
+            @content;
+        }
+    }
+
+    @else {
+        @media screen and (min-width: calc(map-get($breakpoints, "xxl") + 1px)) {
+            @content;
+        }
+    }
+}
+
+@mixin xxxl($type: 'max') {
+    @if ($type =="max") {
+        @media screen and (max-width: map-get($breakpoints, "xxxl")) {
+            @content;
+        }
+    }
+
+    @else {
+        @media screen and (min-width: calc(map-get($breakpoints, "xxxl") + 1px)) {
+            @content;
+        }
+    }
+}

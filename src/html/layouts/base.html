@@ -2,25 +2,23 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@@title</title>
-    @@include('../partials/seo.html')
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@@title Trilogy Soft</title>
+    @@include('html/partials/seo.html')
 
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 
 <body>
-    @@include('../partials/header.html')
+    @@include('html/partials/header.html')
     <main>
-        <h1>Welcome to the Starter Kit</h1>
-        <button class="button btn btn-sm">Click Me</button>
-        @@include("../pages/@@section")
+        @@include('html/@@section')
     </main>
+    @@include('html/partials/footer.html')
 
-    @@include('../partials/footer.html')
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/jquery-3.7.1.min.js"></script>
     <script src="assets/js/script.js"></script>

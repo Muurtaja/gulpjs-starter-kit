@@ -1,4 +1,29 @@
-@function px-to-rem($px, $base: 16) {
-    @return ($px / $base) * 1rem;
+@use "sass:math";
+
+@function rem($px, $base: 16) {
+  @if unit($px)==rem {
+    $value-without-unit: math.div($px, ($px * 0 + 1));
+    @return $value-without-unit;
   }
-  
+
+  @else if unit($px)==px {
+    $value-without-unit: math.div($px, ($px * 0 + 1));
+    $val: calc($value-without-unit / $base); //assume em always 16px;
+    @return $val;
+  }
+
+  @else if unit($px)=='' {
+    $val: calc($px / $base);
+    @return $val;
+  }
+
+  @else {
+    @warn "Invalid Value "; //syntax errors return;
+    @return '';
+  }
+}
+
+// Convert Hex to RGB
+@function RGB($hex) {
+  @return red($hex), green($hex), blue($hex);
+}

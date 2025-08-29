@@ -1,9 +1,71 @@
-.button {
-    background-color: $primary-color;
-    color: white;
-    padding: px-to-rem(12) px-to-rem(20);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+/* Button component styles */
+.btn {
+  --btn-base: var(--primary);
+  --btn-color: var(--white);
+  --btn-outline-border: var(--btn-base);
+  --btn-outline-color: var(--btn-base);
+  background-color: rgb(var(--btn-base));
+  color: rgb(var(--btn-color));
+  padding: 8px 20px;
+  border-radius: 5px;
+  border: 1px solid rgb(var(--border-color));
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  &.btn-outline {
+    background-color: transparent !important;
+    color: rgb(var(--btn-outline-color));
+    border: 1px solid rgb(var(--btn-outline-border));
+
+
+    &:hover {
+      background-color: rgb(var(--btn-base));
+      color: var(--white);
+    }
+
+    &:active {
+      background-color: color-mix(in srgb, rgb(var(--btn-base)) 80%, black) !important;
+      color: var(--white) !important;
+      transform: scale(1.03);
+    }
   }
-  
+
+  &:hover {
+    background-color: color-mix(in srgb, rgb(var(--btn-base)) 80%, black) !important;
+    color: rgb(var(--btn-color));
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, rgb(var(--btn-base)) 80%, black) !important;
+    color: rgb(var(--btn-color)) !important;
+    transform: scale(1.03);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+
+
+  &.btn-sm {
+    padding: 7px 10px;
+    font-size: 14px;
+  }
+
+  &.btn-lg {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
+
+.pill {
+  border-radius: 100px !important;
+}
+
+@each $name, $values in $colors {
+  .custom-btn-#{$name} {
+    --btn-base: var(--#{$name});
+  }
+}
