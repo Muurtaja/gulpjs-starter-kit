@@ -7,26 +7,28 @@ const sourcemaps = require('gulp-sourcemaps');
 const through2 = require('through2');
 const Vinyl = require('vinyl');
 const path = require('path');
+const htmlBeautify = require('gulp-html-beautify');
+const cssbeautify = require('gulp-cssbeautify');
 
 // Helpers
 function titleCase(str) {
     return String(str)
-        .replace(/^_/, '')              // remove leading underscore
-        .replace(/\.[^.]+$/, '')        // drop extension
-        .replace(/[-_]+/g, ' ')         // dashes/underscores -> space
+        .replace(/^_/, '')
+        .replace(/\.[^.]+$/, '')
+        .replace(/[-_]+/g, ' ')
         .replace(/\s+/g, ' ')
         .trim()
         .replace(/\b\w/g, m => m.toUpperCase());
 }
 
 function cleanFileName(basename) {
-    return basename.replace(/^_/, ''); // strip leading underscore for output filename
+    return basename.replace(/^_/, '');
 }
 
 // Paths
 const paths = {
     html: {
-        pages: 'src/html/pages/*.html',       // <-- loop these
+        pages: 'src/html/pages/*.html',
         layout: 'src/html/layouts/base.html',
         dest: 'dist/',
         watch: 'src/html/**/*.html'
@@ -47,13 +49,7 @@ function clean() {
     return del(['dist']);
 }
 
-/**
- * Build pages:
- *  - Read every file in src/html/pages/*.html
- *  - Wrap its path into base.html via @@include parameters
- *  - Run gulp-file-include
- *  - Output one file per page (underscore removed if present)
- */
+// Build HTML
 function html() {
     return src(paths.html.pages)
         .pipe(
@@ -61,19 +57,18 @@ function html() {
                 if (!pageFile.isBuffer()) return cb(null, pageFile);
 
                 const pageRelPath = path.relative(
-                    path.join(pageFile.base, '..'), // src/html/
-                    pageFile.path                   // src/html/pages/<file>
-                ); // e.g. 'pages/_index.html' or 'pages/about.html'
+                    path.join(pageFile.base, '..'),
+                    pageFile.path
+                );
 
-                const basename = path.basename(pageFile.path);           // '_index.html'
-                const outBase = cleanFileName(basename);                 // 'index.html'
-                const title = titleCase(basename);                       // 'Index' or 'About Us'
+                const basename = path.basename(pageFile.path);
+                const outBase = cleanFileName(basename);
+                const title = titleCase(basename);
 
-                // Create a VIRTUAL wrapper file that includes base with params
                 const wrapper = new Vinyl({
                     cwd: pageFile.cwd,
                     base: pageFile.base,
-                    path: path.join(pageFile.base, outBase), // output name at this stage
+                    path: path.join(pageFile.base, outBase),
                     contents: Buffer.from(
                         `@@include('html/layouts/base.html', {\n` +
                         `  "title": "${title}",\n` +
@@ -86,16 +81,18 @@ function html() {
                 cb();
             })
         )
-        .pipe(fileInclude({ prefix: '@@', basepath: 'src' })) // basepath 'src' so our wrapper include works
+        .pipe(fileInclude({ prefix: '@@', basepath: 'src' }))
+        .pipe(htmlBeautify({ indent_size: 2, preserve_newlines: true }))
         .pipe(dest(paths.html.dest))
         .pipe(browserSync.stream());
 }
 
-// Compile SCSS
+// Compile SCSS -> CSS (beautify at end)
 function scss() {
     return src(paths.scss.src)
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
+        .pipe(cssbeautify({ indent: '  ', autosemicolon: true }))
         .pipe(sourcemaps.write('.'))
         .pipe(dest(paths.scss.dest))
         .pipe(browserSync.stream());
