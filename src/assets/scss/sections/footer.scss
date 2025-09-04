@@ -21,7 +21,7 @@
     }
 
     .footer-title {
-        font-size: 18px;
+        font-size: _rem(18px);
         font-weight: 600;
         line-height: 22px;
         color: var(--black);
@@ -32,7 +32,7 @@
         padding-top: 22px;
 
         .download-title {
-            font-size: 15px;
+            font-size: _rem(15px);
             display: block;
             margin-bottom: 15px;
             font-weight: 500;
@@ -100,7 +100,7 @@
             margin-top: 8px;
 
             a {
-                font-size: 16px;
+                font-size: _rem(16px);
                 line-height: 24px;
                 color: rgb(var(--black));
                 margin-top: 16px;
@@ -128,7 +128,6 @@
                 display: block;
                 margin-top: 15px;
                 position: relative;
-                padding-left: 24px;
                 color: rgb(var(--black));
 
                 &:first-child {
@@ -136,7 +135,7 @@
                 }
 
                 i {
-                    font-size: 18px;
+                    font-size: _rem(18px);
                     position: absolute;
                     left: 0;
                     top: 4px;
@@ -171,7 +170,7 @@
             }
 
             a {
-                font-size: 18px;
+                font-size: _rem(18px);
                 color: rgb(var(--black));
                 transition: all 0.3s ease-out 0s;
 

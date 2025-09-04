@@ -36,21 +36,9 @@ const paths = {
         dest: 'dist/assets/css/',
         watch: 'src/assets/scss/**/*.scss'
     },
-    css: {
-        src: 'src/assets/css/**/*.css',
-        dest: 'dist/assets/css/'
-    },
     js: {
         src: 'src/assets/js/**/*.js',
         dest: 'dist/assets/js/'
-    },
-    img: {
-        src: 'src/assets/img/**/*',
-        dest: 'dist/assets/img/'
-    },
-    webfonts: {
-        src: 'src/assets/webfonts/**/*',
-        dest: 'dist/assets/webfonts/'
     }
 };
 
@@ -82,7 +70,6 @@ function html() {
                 const title = titleCase(basename);                       // 'Index' or 'About Us'
 
                 // Create a VIRTUAL wrapper file that includes base with params
-                // Section = the original page file relative path (e.g. 'pages/_index.html')
                 const wrapper = new Vinyl({
                     cwd: pageFile.cwd,
                     base: pageFile.base,
@@ -114,31 +101,10 @@ function scss() {
         .pipe(browserSync.stream());
 }
 
-// Copy raw CSS
-function css() {
-    return src(paths.css.src)
-        .pipe(dest(paths.css.dest))
-        .pipe(browserSync.stream());
-}
-
-// Copy JS
-function js() {
-    return src(paths.js.src)
-        .pipe(dest(paths.js.dest))
-        .pipe(browserSync.stream());
-}
-
-// Copy images
-function images() {
-    return src(paths.img.src, { encoding: false })
-        .pipe(dest(paths.img.dest))
-        .pipe(browserSync.stream());
-}
-
-// Copy webfonts
-function webfonts() {
-    return src(paths.webfonts.src)
-        .pipe(dest(paths.webfonts.dest))
+// Copy all assets except scss
+function assets() {
+    return src(['src/assets/**', '!src/assets/scss{,/**}'])
+        .pipe(dest('dist/assets/'))
         .pipe(browserSync.stream());
 }
 
@@ -150,14 +116,17 @@ function serve() {
 
     watch(paths.html.watch, html);
     watch(paths.scss.watch, scss);
-    watch(paths.css.src, css);
-    watch(paths.js.src, js);
-    watch(paths.img.src, images);
+
+    // JS watch → copy + reload
+    watch(paths.js.src, series(assets, function reloadJs(cb) {
+        browserSync.reload();
+        cb();
+    }));
 }
 
 // Default task
 exports.default = series(
     clean,
-    parallel(html, scss, css, js, images, webfonts),
+    parallel(html, scss, assets),
     serve
 );
