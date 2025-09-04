@@ -1,0 +1,88 @@
+/* Alert Css Start */
+[class*="custom-alert"] {
+    --base: var(--alert-base, var(--primary));
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: rgb(var(--base));
+    border: 1px solid currentColor;
+    background-color: color-mix(in srgb, rgb(var(--base)) 20%, transparent);
+
+    &:has(.btn-close) {
+        display: flex;
+        gap: 10px;
+    }
+
+    &:has(.alert-icon) {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 10px;
+    }
+
+
+    .btn-close {
+        background: transparent !important;
+        box-shadow: unset !important;
+        opacity: 1;
+        filter: unset !important;
+        position: relative;
+        margin-left: auto;
+        margin-right: 10px;
+        flex: 0;
+
+        &::before {
+            --t-width: 22px;
+            content: '\f00d';
+            font-family: 'Font Awesome 7 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: var(--t-width);
+            height: var(--t-width);
+            background-color: color-mix(in srgb, #000 20%, #fff);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            line-height: 1;
+            border: 1px solid rgb(var(--black), 0.2);
+            transition: all 0.3s ease !important;
+            border-radius: 100%;
+
+
+
+        }
+
+        &:hover {
+
+            &::before {
+                background-color: color-mix(in srgb, rgb(var(--danger)) 20%, rgb(var(--white)));
+                color: rgb(var(--danger));
+                border: 1px solid rgb(var(--danger));
+            }
+        }
+    }
+
+    .alert-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffffff;
+        block-size: 1.875rem;
+        color: rgb(var(--base));
+        inline-size: 1.875rem;
+        margin-inline-end: 1rem;
+        border: 1px solid rgb(var(--base));
+    }
+}
+
+@each $name, $values in $colors {
+    .custom-alert-#{$name} {
+        --alert-base: var(--#{$name});
+    }
+}

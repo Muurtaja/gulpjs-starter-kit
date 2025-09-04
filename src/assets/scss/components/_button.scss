@@ -1,11 +1,11 @@
 /* Button component styles */
-.btn {
-  --btn-base: var(--primary);
-  --btn-color: var(--white);
-  --btn-outline-border: var(--btn-base);
-  --btn-outline-color: var(--btn-base);
-  background-color: rgb(var(--btn-base));
-  color: rgb(var(--btn-color));
+[class*="custom-btn"] {
+  --base: var(--primary);
+  --color: var(--white);
+  --outline-border: var(--base);
+  --outline-color: var(--base);
+  background-color: rgb(var(--base));
+  color: rgb(var(--color));
   padding: 8px 20px;
   border-radius: 5px;
   border: 1px solid rgb(var(--border-color));
@@ -16,30 +16,30 @@
 
   &.btn-outline {
     background-color: transparent !important;
-    color: rgb(var(--btn-outline-color));
-    border: 1px solid rgb(var(--btn-outline-border));
+    color: rgb(var(--outline-color));
+    border: 1px solid rgb(var(--outline-border));
 
 
     &:hover {
-      background-color: rgb(var(--btn-base));
-      color: var(--white);
+      background-color: rgb(var(--base));
+      color: rgb(var(--white));
     }
 
     &:active {
-      background-color: color-mix(in srgb, rgb(var(--btn-base)) 80%, black) !important;
-      color: var(--white) !important;
+      background-color: color-mix(in srgb, rgb(var(--base)) 80%, black) !important;
+      color: rgb(var(--white)) !important;
       transform: scale(1.03);
     }
   }
 
   &:hover {
-    background-color: color-mix(in srgb, rgb(var(--btn-base)) 80%, black) !important;
-    color: rgb(var(--btn-color));
+    background-color: color-mix(in srgb, rgb(var(--base)) 80%, black) !important;
+    color: rgb(var(--color));
   }
 
   &:active {
-    background-color: color-mix(in srgb, rgb(var(--btn-base)) 80%, black) !important;
-    color: rgb(var(--btn-color)) !important;
+    background-color: color-mix(in srgb, rgb(var(--base)) 80%, black) !important;
+    color: rgb(var(--color)) !important;
     transform: scale(1.03);
   }
 
@@ -66,6 +66,6 @@
 
 @each $name, $values in $colors {
   .custom-btn-#{$name} {
-    --btn-base: var(--#{$name});
+    --base: var(--#{$name});
   }
 }

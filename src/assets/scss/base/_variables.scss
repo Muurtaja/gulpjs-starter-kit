@@ -1,26 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Story+Script&display=swap');
 $colors: (
-    // Thee Color
-    "body-text": RGB(#707172),
-    "body-bg": RGB(#f5f6fa),
-    "sidebar-bg": RGB(#ffffff),
-    "heading-color": RGB(#111827),
-    "border-color": RGB(#ebecef),
-
     // Semantic colors
-    "primary": RGB(#3b82f6),
-    "secondary": RGB(#6b7280),
-    "success": RGB(#22c55e),
-    "danger": RGB(#ef4444),
-    "warning": RGB(#f59e0b),
-    "info": RGB(#0ea5e9),
-
-    // Common Color
-    "light": RGB(#f3f4f6),
-    "dark": RGB(#1f2937),
-    "muted": RGB(#9ca3af),
-    "white": RGB(#ffffff),
-    "black": RGB(#000000),
+    "primary": _rgb(#f01bcc),
+    "secondary": _rgb(#6b7280),
+    "success": _rgb(#22c55e),
+    "danger": _rgb(#ef4444),
+    "warning": _rgb(#f59e0b),
+    "info": _rgb(#0ea5e9),
+    "dark": _rgb(#1f2937),
 );
 
 // Mixin to generate CSS variables from color map
@@ -34,7 +21,21 @@ $colors: (
 :root {
     @include getVariables($colors);
 
+    // Thee Color
+    --body-text: #{_rgb(#707172)};
+    --body-bg: #{_rgb(#f5f6fa)};
+    --body-color: #{_rgb(#111827)};
+    --sidebar-bg: #{_rgb(#ffffff)};
+    --heading-color: #{_rgb(#111827)};
+    --border-color: #{_rgb(#ebecef)};
+
+    // Common Color
+    --light: #{_rgb(#f3f4f6)};
+    --muted: #{_rgb(#9ca3af)};
+    --white: #{_rgb(#ffffff)};
+    --black: #{_rgb(#000000)};
+
     /* Typography */
-    --body-font: 'Roboto', sans-serif;
-    --heading-font: 'Story Script', sans-serif;
+    --paragraph-font: 'Roboto', sans-serif;
+    --title-font: 'Story Script', sans-serif;
 }
