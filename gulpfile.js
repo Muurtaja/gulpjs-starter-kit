@@ -7,6 +7,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const through2 = require('through2');
 const Vinyl = require('vinyl');
 const path = require('path');
+const fs = require('fs');
 const htmlBeautify = require('gulp-html-beautify');
 const cssbeautify = require('gulp-cssbeautify');
 
@@ -25,11 +26,16 @@ function cleanFileName(basename) {
     return basename.replace(/^_/, '');
 }
 
+function getTopFolderUnderPages(pageFile) {
+    const relFromPages = path.relative(pageFile.base, pageFile.path);
+    const parts = path.dirname(relFromPages).split(path.sep).filter(Boolean);
+    return parts.length ? parts[0] : null;
+}
+
 // Paths
 const paths = {
     html: {
-        pages: 'src/html/pages/*.html',
-        layout: 'src/html/layouts/base.html',
+        pages: 'src/html/pages/**/*.html',
         dest: 'dist/',
         watch: 'src/html/**/*.html'
     },
@@ -49,32 +55,57 @@ function clean() {
     return del(['dist']);
 }
 
-// Build HTML
 function html() {
+    const masterPath = 'src/html/layouts/_master.html';
+    const masterTemplate = fs.readFileSync(masterPath, 'utf8');
+
     return src(paths.html.pages)
         .pipe(
             through2.obj(function (pageFile, _, cb) {
                 if (!pageFile.isBuffer()) return cb(null, pageFile);
 
-                const pageRelPath = path.relative(
-                    path.join(pageFile.base, '..'),
-                    pageFile.path
-                );
-
                 const basename = path.basename(pageFile.path);
+                const startsWithUnderscore = basename.startsWith('_');
                 const outBase = cleanFileName(basename);
                 const title = titleCase(basename);
+
+                let finalContent;
+
+                if (startsWithUnderscore) {
+                    // Files with '_' use the standard layout system with @@include.
+                    // This logic is correct and doesn't cause recursion.
+                    const pageRelPathFromHtml = path.relative(path.join(pageFile.base, '..'), pageFile.path).replace(/\\/g, '/');
+                    const sectionForInclude = `html/${pageRelPathFromHtml}`;
+                    const topFolder = getTopFolderUnderPages(pageFile);
+                    let chosenLayout = 'html/layouts/_layout.html';
+                    if (topFolder) {
+                        const candidateFs = path.join(pageFile.base, '..', 'layouts', `_${topFolder}.html`);
+                        if (fs.existsSync(candidateFs)) chosenLayout = `html/layouts/_${topFolder}.html`;
+                    }
+                    const contentPath = chosenLayout;
+
+                    finalContent = masterTemplate
+                        .replace(
+                            "@@include('@@content', {\"title\":\"@@title\",\"section\":\"@@section\"})",
+                            `@@include('${contentPath}', {"title":"${title}","section":"${sectionForInclude}"})`
+                        )
+                        .replace(/@@title/g, title);
+                } else {
+                    // Files without '_' get their content manually injected into the master template.
+                    // This avoids creating a recursive @@include directive.
+                    const pageContent = pageFile.contents.toString('utf8');
+
+                    finalContent = masterTemplate
+                        // Replace the entire @@include directive for the content block with the actual page content.
+                        .replace(/@@include\s*\(\s*'@@content'.*?\)/s, pageContent)
+                        .replace(/@@title/g, title);
+                }
 
                 const wrapper = new Vinyl({
                     cwd: pageFile.cwd,
                     base: pageFile.base,
                     path: path.join(pageFile.base, outBase),
-                    contents: Buffer.from(
-                        `@@include('html/layouts/base.html', {\n` +
-                        `  "title": "${title}",\n` +
-                        `  "section": "${pageRelPath.replace(/\\/g, '/')}"\n` +
-                        `})\n`
-                    )
+                    contents: Buffer.from(finalContent)
                 });
 
                 this.push(wrapper);
@@ -86,6 +117,7 @@ function html() {
         .pipe(dest(paths.html.dest))
         .pipe(browserSync.stream());
 }
+
 
 // Compile SCSS -> CSS (beautify at end)
 function scss() {
@@ -127,3 +159,4 @@ exports.default = series(
     parallel(html, scss, assets),
     serve
 );
+

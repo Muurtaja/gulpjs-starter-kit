@@ -39,6 +39,15 @@
 }
 
 
+.header-sticky {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    animation: slide-animation 0.8s;
+    backdrop-filter: blur(10px);
+}
 
 .counter-container-wrapper {
     background: rgb(var(--base), 0.1);
@@ -51,6 +60,15 @@
 @include createSpace(margin, $section);
 
 
+@keyframes slide-animation {
+    0% {
+        transform: translateY(-120%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
 
 [data-bg-img] {
     background-position: center;

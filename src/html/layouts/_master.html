@@ -5,8 +5,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@@title Trilogy Soft</title>
-    @@include('html/partials/seo.html')
+    <title>@@title | Trilogy Soft</title>
+    @@include('html/partials/_seo.html')
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
@@ -17,13 +17,10 @@
 </head>
 
 <body>
-    @@include('html/partials/header.html')
-    @@include('html/components/_back-to-top.html')
-    @@include('html/components/_preloader.html')
-    <main>
-        @@include('html/@@section')
-    </main>
-    @@include('html/partials/footer.html')
+    <!-- layout gets injected here -->
+    @@include('@@content', {"title":"@@title","section":"@@section"})
+
+
     <script src="assets/js/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

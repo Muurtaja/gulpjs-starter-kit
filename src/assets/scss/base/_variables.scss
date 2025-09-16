@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Story+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Oswald&display=swap');
 $colors: (
     // Semantic colors
     "primary": _rgb(#f01bcc),
@@ -37,5 +37,5 @@ $colors: (
 
     /* Typography */
     --paragraph-font: 'Roboto', sans-serif;
-    --title-font: 'Story Script', sans-serif;
+    --title-font: 'Oswald', sans-serif;
 }
