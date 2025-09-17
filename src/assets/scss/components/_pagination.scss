@@ -1,0 +1,47 @@
+ .pagination {
+     .page-item {
+         &:not(:last-child) {
+             margin-right: 6px;
+         }
+
+         .page-link {
+             border-radius: .5rem;
+             border: 1px solid rgb(var(--border-color));
+             color: rgb(var(--body-color));
+             height: 38px;
+             width: 38px;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             transition: all 0.3s;
+
+             @media screen and (max-width:575px) {
+                 width: fit-content;
+             }
+
+
+
+             &:focus {
+                 box-shadow: none;
+             }
+
+
+
+         }
+
+         &.active {
+             .page-link {
+                 background-color: rgb(var(--primary));
+                 color: rgb(var(--white));
+                 border-color: rgb(var(--primary));
+             }
+         }
+
+         &:hover:not(.active) {
+             .page-link {
+                 background-color: rgb(var(--primary), 0.05);
+                 border-color: rgb(var(--primary));
+             }
+         }
+     }
+ }

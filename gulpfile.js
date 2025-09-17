@@ -7,27 +7,35 @@ const sourcemaps = require('gulp-sourcemaps');
 const through2 = require('through2');
 const Vinyl = require('vinyl');
 const path = require('path');
+const fs = require('fs');
+const htmlBeautify = require('gulp-html-beautify');
+const cssbeautify = require('gulp-cssbeautify');
 
 // Helpers
 function titleCase(str) {
     return String(str)
-        .replace(/^_/, '')              // remove leading underscore
-        .replace(/\.[^.]+$/, '')        // drop extension
-        .replace(/[-_]+/g, ' ')         // dashes/underscores -> space
+        .replace(/^_/, '')
+        .replace(/\.[^.]+$/, '')
+        .replace(/[-_]+/g, ' ')
         .replace(/\s+/g, ' ')
         .trim()
         .replace(/\b\w/g, m => m.toUpperCase());
 }
 
 function cleanFileName(basename) {
-    return basename.replace(/^_/, ''); // strip leading underscore for output filename
+    return basename.replace(/^_/, '');
+}
+
+function getTopFolderUnderPages(pageFile) {
+    const relFromPages = path.relative(pageFile.base, pageFile.path);
+    const parts = path.dirname(relFromPages).split(path.sep).filter(Boolean);
+    return parts.length ? parts[0] : null;
 }
 
 // Paths
 const paths = {
     html: {
-        pages: 'src/html/pages/*.html',       // <-- loop these
-        layout: 'src/html/layouts/base.html',
+        pages: 'src/html/pages/**/*.html',
         dest: 'dist/',
         watch: 'src/html/**/*.html'
     },
@@ -36,21 +44,9 @@ const paths = {
         dest: 'dist/assets/css/',
         watch: 'src/assets/scss/**/*.scss'
     },
-    css: {
-        src: 'src/assets/css/**/*.css',
-        dest: 'dist/assets/css/'
-    },
     js: {
         src: 'src/assets/js/**/*.js',
         dest: 'dist/assets/js/'
-    },
-    img: {
-        src: 'src/assets/img/**/*',
-        dest: 'dist/assets/img/'
-    },
-    webfonts: {
-        src: 'src/assets/webfonts/**/*',
-        dest: 'dist/assets/webfonts/'
     }
 };
 
@@ -59,86 +55,85 @@ function clean() {
     return del(['dist']);
 }
 
-/**
- * Build pages:
- *  - Read every file in src/html/pages/*.html
- *  - Wrap its path into base.html via @@include parameters
- *  - Run gulp-file-include
- *  - Output one file per page (underscore removed if present)
- */
 function html() {
+    const masterPath = 'src/html/layouts/_master.html';
+    const masterTemplate = fs.readFileSync(masterPath, 'utf8');
+
     return src(paths.html.pages)
         .pipe(
             through2.obj(function (pageFile, _, cb) {
                 if (!pageFile.isBuffer()) return cb(null, pageFile);
 
-                const pageRelPath = path.relative(
-                    path.join(pageFile.base, '..'), // src/html/
-                    pageFile.path                   // src/html/pages/<file>
-                ); // e.g. 'pages/_index.html' or 'pages/about.html'
+                const basename = path.basename(pageFile.path);
+                const startsWithUnderscore = basename.startsWith('_');
+                const outBase = cleanFileName(basename);
+                const title = titleCase(basename);
 
-                const basename = path.basename(pageFile.path);           // '_index.html'
-                const outBase = cleanFileName(basename);                 // 'index.html'
-                const title = titleCase(basename);                       // 'Index' or 'About Us'
+                let finalContent;
 
-                // Create a VIRTUAL wrapper file that includes base with params
-                // Section = the original page file relative path (e.g. 'pages/_index.html')
+                if (startsWithUnderscore) {
+                    // Files with '_' use the standard layout system with @@include.
+                    // This logic is correct and doesn't cause recursion.
+                    const pageRelPathFromHtml = path.relative(path.join(pageFile.base, '..'), pageFile.path).replace(/\\/g, '/');
+                    const sectionForInclude = `html/${pageRelPathFromHtml}`;
+                    const topFolder = getTopFolderUnderPages(pageFile);
+                    let chosenLayout = 'html/layouts/_layout.html';
+                    if (topFolder) {
+                        const candidateFs = path.join(pageFile.base, '..', 'layouts', `_${topFolder}.html`);
+                        if (fs.existsSync(candidateFs)) chosenLayout = `html/layouts/_${topFolder}.html`;
+                    }
+                    const contentPath = chosenLayout;
+
+                    finalContent = masterTemplate
+                        .replace(
+                            "@@include('@@content', {\"title\":\"@@title\",\"section\":\"@@section\"})",
+                            `@@include('${contentPath}', {"title":"${title}","section":"${sectionForInclude}"})`
+                        )
+                        .replace(/@@title/g, title);
+                } else {
+                    // Files without '_' get their content manually injected into the master template.
+                    // This avoids creating a recursive @@include directive.
+                    const pageContent = pageFile.contents.toString('utf8');
+
+                    finalContent = masterTemplate
+                        // Replace the entire @@include directive for the content block with the actual page content.
+                        .replace(/@@include\s*\(\s*'@@content'.*?\)/s, pageContent)
+                        .replace(/@@title/g, title);
+                }
+
                 const wrapper = new Vinyl({
                     cwd: pageFile.cwd,
                     base: pageFile.base,
-                    path: path.join(pageFile.base, outBase), // output name at this stage
-                    contents: Buffer.from(
-                        `@@include('html/layouts/base.html', {\n` +
-                        `  "title": "${title}",\n` +
-                        `  "section": "${pageRelPath.replace(/\\/g, '/')}"\n` +
-                        `})\n`
-                    )
+                    path: path.join(pageFile.base, outBase),
+                    contents: Buffer.from(finalContent)
                 });
 
                 this.push(wrapper);
                 cb();
             })
         )
-        .pipe(fileInclude({ prefix: '@@', basepath: 'src' })) // basepath 'src' so our wrapper include works
+        .pipe(fileInclude({ prefix: '@@', basepath: 'src' }))
+        .pipe(htmlBeautify({ indent_size: 2, preserve_newlines: true }))
         .pipe(dest(paths.html.dest))
         .pipe(browserSync.stream());
 }
 
-// Compile SCSS
+
+// Compile SCSS -> CSS (beautify at end)
 function scss() {
     return src(paths.scss.src)
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
+        .pipe(cssbeautify({ indent: '  ', autosemicolon: true }))
         .pipe(sourcemaps.write('.'))
         .pipe(dest(paths.scss.dest))
         .pipe(browserSync.stream());
 }
 
-// Copy raw CSS
-function css() {
-    return src(paths.css.src)
-        .pipe(dest(paths.css.dest))
-        .pipe(browserSync.stream());
-}
-
-// Copy JS
-function js() {
-    return src(paths.js.src)
-        .pipe(dest(paths.js.dest))
-        .pipe(browserSync.stream());
-}
-
-// Copy images
-function images() {
-    return src(paths.img.src, { encoding: false })
-        .pipe(dest(paths.img.dest))
-        .pipe(browserSync.stream());
-}
-
-// Copy webfonts
-function webfonts() {
-    return src(paths.webfonts.src)
-        .pipe(dest(paths.webfonts.dest))
+// Copy all assets except scss
+function assets() {
+    return src(['src/assets/**', '!src/assets/scss{,/**}'])
+        .pipe(dest('dist/assets/'))
         .pipe(browserSync.stream());
 }
 
@@ -150,14 +145,18 @@ function serve() {
 
     watch(paths.html.watch, html);
     watch(paths.scss.watch, scss);
-    watch(paths.css.src, css);
-    watch(paths.js.src, js);
-    watch(paths.img.src, images);
+
+    // JS watch → copy + reload
+    watch(paths.js.src, series(assets, function reloadJs(cb) {
+        browserSync.reload();
+        cb();
+    }));
 }
 
 // Default task
 exports.default = series(
     clean,
-    parallel(html, scss, css, js, images, webfonts),
+    parallel(html, scss, assets),
     serve
 );
+

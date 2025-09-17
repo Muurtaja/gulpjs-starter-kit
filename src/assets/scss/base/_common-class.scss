@@ -1,0 +1,77 @@
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.items-center {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.justify-between {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
+
+.section-title {
+    font-size: clampCal(30px, 50px);
+}
+
+.sub-title {
+    border: 1px solid rgb(var(--base), 1);
+    background: rgb(var(--base), 0.05);
+    border-radius: 100px;
+    padding: 10px 15px;
+    width: fit-content;
+    font-size: clampCal(14px, 16px);
+    margin-bottom: 0;
+}
+
+
+.header-sticky {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    animation: slide-animation 0.8s;
+    backdrop-filter: blur(10px);
+}
+
+.counter-container-wrapper {
+    background: rgb(var(--base), 0.1);
+    border: 1px solid rgb(var(--base), 1);
+}
+
+@import './section-space';
+// Generate padding and margin classes separately
+@include createSpace(padding, $section);
+@include createSpace(margin, $section);
+
+
+@keyframes slide-animation {
+    0% {
+        transform: translateY(-120%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+[data-bg-img] {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}

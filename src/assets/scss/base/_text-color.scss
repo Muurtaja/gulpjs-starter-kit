@@ -1,0 +1,15 @@
+/* Text and Background Color Utilities */
+
+// Generate text color classes
+@each $name, $values in $colors {
+    .custom-text-#{$name} {
+        color: rgb(var(--#{$name}));
+    }
+}
+
+// Generate background color classes
+@each $name, $values in $colors {
+    .custom-bg-#{$name} {
+        background-color: rgb(var(--#{$name}));
+    }
+}

@@ -1,0 +1,104 @@
+/* --------------------------------------------
+    Template Default Fonts & Fonts Styles
+ ---------------------------------------------- */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: var(--paragraph-font);
+    color: rgb(var(--body-color));
+    font-size: _rem(16px);
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+button {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+input:focus {
+    box-shadow: unset;
+    outline: none;
+}
+
+
+
+p {
+    margin: 0px;
+    font-family: var(--paragraph-font);
+}
+
+img {
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--title-font);
+    margin: 0 0 16px 0;
+    padding: 0;
+    color: inherit;
+    line-height: 120%;
+    font-weight: 700;
+
+    a {
+        font-size: inherit;
+        color: inherit;
+        font-weight: inherit;
+
+    }
+}
+
+
+h1 {
+    --font-size: #{ _clamp(50, 80)};
+}
+
+
+h2 {
+    --font-size: #{_clamp(30px, 60px)};
+}
+
+
+h3 {
+    --font-size: #{_clamp(30px, 50px)};
+
+}
+
+h4 {
+    --font-size: #{_clamp(25px, 35px)};
+}
+
+h5 {
+    --font-size: #{_clamp(18px, 25px)};
+}
+
+h6 {
+    --font-size: #{_clamp(16px, 18px)};
+}
+
+a {
+    text-decoration: none;
+    outline: none !important;
+    color: currentColor;
+}

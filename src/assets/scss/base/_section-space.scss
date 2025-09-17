@@ -1,0 +1,49 @@
+@mixin setSpace($values, $property) {
+    #{$property}: map-get($values, xl);
+
+    @include md {
+        #{$property}: map-get($values, md);
+    }
+
+    @include xsm {
+        #{$property}: map-get($values, xsm);
+    }
+}
+
+@mixin createSpace($property, $section-spaces) {
+    $prefix: '';
+
+    @if($property==padding) {
+        $prefix: p;
+    }
+
+    @if($property==margin) {
+        $prefix: m;
+    }
+
+    @each $size, $values in $section-spaces {
+        .#{$prefix}y-#{$size} {
+            @include setSpace($values, #{$property}-block);
+        }
+
+        .#{$prefix}t-#{$size} {
+            @include setSpace($values, #{$property}-top);
+        }
+
+        .#{$prefix}b-#{$size} {
+            @include setSpace($values, #{$property}-bottom);
+        }
+    }
+}
+
+
+// Global Section Spacing
+$section: (
+    100: (xl: 100px,
+        md: 80px,
+        xsm: 50px),
+
+    50: (xl: 50px,
+        md: 35px,
+        xsm: 20px)
+);
