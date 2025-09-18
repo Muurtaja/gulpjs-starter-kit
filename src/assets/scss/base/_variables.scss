@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Oswald&display=swap');
+
+// Semantic colors
 $colors: (
-    // Semantic colors
     "primary": _rgb(#f01bcc),
     "secondary": _rgb(#6b7280),
     "success": _rgb(#22c55e),
@@ -21,7 +22,7 @@ $colors: (
 :root {
     @include getVariables($colors);
 
-    // Thee Color
+    // Theme Color
     --body-text: #{_rgb(#707172)};
     --body-bg: #{_rgb(#f5f6fa)};
     --body-color: #{_rgb(#111827)};
