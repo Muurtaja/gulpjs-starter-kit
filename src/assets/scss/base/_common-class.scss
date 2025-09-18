@@ -49,13 +49,14 @@
     backdrop-filter: blur(10px);
 }
 
-.counter-container-wrapper {
-    background: rgb(var(--base), 0.1);
-    border: 1px solid rgb(var(--base), 1);
+[data-bg-img] {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
-@import './section-space';
 // Generate padding and margin classes separately
+@import './section-space';
 @include createSpace(padding, $section);
 @include createSpace(margin, $section);
 
@@ -68,10 +69,4 @@
     100% {
         transform: translateY(0);
     }
-}
-
-[data-bg-img] {
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
 }

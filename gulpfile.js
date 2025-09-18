@@ -56,7 +56,7 @@ function clean() {
 }
 
 function html() {
-    const masterPath = 'src/html/layouts/_master.html';
+    const masterPath = 'src/html/base/_master.html';
     const masterTemplate = fs.readFileSync(masterPath, 'utf8');
 
     return src(paths.html.pages)
@@ -77,10 +77,10 @@ function html() {
                     const pageRelPathFromHtml = path.relative(path.join(pageFile.base, '..'), pageFile.path).replace(/\\/g, '/');
                     const sectionForInclude = `html/${pageRelPathFromHtml}`;
                     const topFolder = getTopFolderUnderPages(pageFile);
-                    let chosenLayout = 'html/layouts/_layout.html';
+                    let chosenLayout = 'html/base/_layout.html';
                     if (topFolder) {
                         const candidateFs = path.join(pageFile.base, '..', 'layouts', `_${topFolder}.html`);
-                        if (fs.existsSync(candidateFs)) chosenLayout = `html/layouts/_${topFolder}.html`;
+                        if (fs.existsSync(candidateFs)) chosenLayout = `html/base/_${topFolder}.html`;
                     }
                     const contentPath = chosenLayout;
 
