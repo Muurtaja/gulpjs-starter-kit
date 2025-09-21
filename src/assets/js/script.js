@@ -17,7 +17,6 @@
                 $("html, body").animate({ scrollTop: 0 }, "300");
             });
         },
-
         backgroundImage() {
             $("[data-bg-img]").css("background-image", function () {
                 return `url(${$(this).data("bg-img")})`;
@@ -34,7 +33,6 @@
                 }
             });
         },
-
         scrollToTop() {
             const $btn = $('#backToTop');
             const showAt = 200;
@@ -57,7 +55,6 @@
 
             toggleVisiable();
         },
-
         activeSelect2() {
             $(".select2").each((index, select) => {
                 $(select)
