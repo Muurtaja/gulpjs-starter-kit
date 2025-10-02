@@ -8,10 +8,30 @@ const through2 = require('through2');
 const Vinyl = require('vinyl');
 const path = require('path');
 const fs = require('fs');
+
 const htmlBeautify = require('gulp-html-beautify');
 const cssbeautify = require('gulp-cssbeautify');
 
-// Helpers
+// Paths
+const paths = {
+    html: {
+        pages: 'src/html/pages/**/*.html',
+        dest: 'dist/',
+        watch: 'src/html/**/*.html'
+    },
+    scss: {
+        src: 'src/assets/scss/style.scss',
+        dest: 'dist/assets/css/',
+        watch: 'src/assets/scss/**/*.scss'
+    },
+};
+
+// Clean dist
+function clean() {
+    return del(['dist']);
+}
+
+// HTML with file include
 function titleCase(str) {
     return String(str)
         .replace(/^_/, '')
@@ -31,30 +51,6 @@ function getTopFolderUnderPages(pageFile) {
     const parts = path.dirname(relFromPages).split(path.sep).filter(Boolean);
     return parts.length ? parts[0] : null;
 }
-
-// Paths
-const paths = {
-    html: {
-        pages: 'src/html/pages/**/*.html',
-        dest: 'dist/',
-        watch: 'src/html/**/*.html'
-    },
-    scss: {
-        src: 'src/assets/scss/style.scss',
-        dest: 'dist/assets/css/',
-        watch: 'src/assets/scss/**/*.scss'
-    },
-    js: {
-        src: 'src/assets/js/**/*.js',
-        dest: 'dist/assets/js/'
-    }
-};
-
-// Clean dist
-function clean() {
-    return del(['dist']);
-}
-
 function html() {
     const masterPath = 'src/html/base/_master.html';
     const masterTemplate = fs.readFileSync(masterPath, 'utf8');
@@ -117,9 +113,7 @@ function html() {
         .pipe(dest(paths.html.dest))
         .pipe(browserSync.stream());
 }
-
-
-// Compile SCSS -> CSS (beautify at end)
+// Compile SCSS
 function scss() {
     return src(paths.scss.src)
         .pipe(sourcemaps.init())
@@ -130,28 +124,26 @@ function scss() {
         .pipe(browserSync.stream());
 }
 
-// Copy all assets except scss
+
 function assets() {
     return src(['src/assets/**', '!src/assets/scss{,/**}'])
         .pipe(dest('dist/assets/'))
         .pipe(browserSync.stream());
 }
-
-// Serve + watch
+// Watch
 function serve() {
     browserSync.init({
-        server: { baseDir: 'dist' }
+        server: { baseDir: 'dist' },
+        open: false,
+        notify: false
     });
 
     watch(paths.html.watch, html);
     watch(paths.scss.watch, scss);
-
-    // JS watch → copy + reload
-    watch(paths.js.src, series(assets, function reloadJs(cb) {
-        browserSync.reload();
-        cb();
-    }));
+    watch(['src/assets/**', '!src/assets/scss{,/**}'], assets);
 }
+
+
 
 // Default task
 exports.default = series(
@@ -159,4 +151,3 @@ exports.default = series(
     parallel(html, scss, assets),
     serve
 );
-
